@@ -24,7 +24,23 @@ class TransactionsRepository {
   }
 
   public getBalance(): Balance {
-    // TODO
+    const groupByType = this.transactions.reduce(
+      (acc: {}, obj: Transaction): {} => {
+        const key = obj.type;
+        if (!acc[key]) {
+          acc[key] = [];
+        }
+        acc[key].push(obj);
+        return acc;
+      },
+      {},
+    );
+
+    const income = groupByType.income.lenght();
+    const outcome = groupByType.outcome.lenght();
+    const balance = income - outcome;
+
+    return { income, outcome, balance };
   }
 
   public create({ title, value, type }: CreateTransactionDTO): Transaction {
