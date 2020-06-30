@@ -28,14 +28,18 @@ class TransactionsRepository {
   }
 
   public getBalance(): Balance {
-    const groupByType = this.transactions.reduce((acc, obj) => {
-      const key: string = obj.type;
-      if (!acc[key]) {
-        acc[key] = [];
-      }
-      acc[key].push(obj);
-      return acc;
-    }, {});
+    const initialValue: Accumulator = { income: [], outcome: [] };
+    const groupByType: Accumulator = this.transactions.reduce(
+      (acc, obj: Transaction) => {
+        const key = obj.type;
+        if (!acc[key]) {
+          acc[key] = [];
+        }
+        acc[key].push(obj);
+        return acc;
+      },
+      initialValue,
+    );
 
     if (this.transactions.length < 1) {
       return {
